@@ -24,24 +24,23 @@ func getResponseJSON(ingredients []string) (*ResponseJSON, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	g := &giphyReq{}
-	return compileResponseFields(ingredients, r, g)
+	return compileResponseFields(ingredients, r)
 }
 
 // compileResponseFields ...
-func compileResponseFields(keyw []string, r *recipeReq, g *giphyReq) (*ResponseJSON, error) {
-	// if len(r.Results) != len(g.Data) {
-	// 	return nil, errors.New("different size recipe and gif slices")
-	// }
-
+func compileResponseFields(keyw []string, r *recipeReq) (*ResponseJSON, error) {
 	recps := make([]Recipe, 0, len(r.Results))
 	for _, r := range r.Results {
+		g, err := sendGiphyReq(r.Title)
+		if err != nil {
+			return nil, err
+		}
+
 		rp := Recipe{
 			Title:       r.Title,
 			Link:        r.Link,
 			Ingredients: strings.Split(r.Ingredients, ", "),
-			Gif:         "TODO",
+			Gif:         g.Data[0].URL,
 		}
 		recps = append(recps, rp)
 	}

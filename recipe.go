@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -26,6 +27,11 @@ func sendRecipeReq(ingredients []string) (*recipeReq, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if s := resp.StatusCode; s != http.StatusOK {
+		return nil, fmt.Errorf("status '%d' encountered with giphy url: '%s'", s, url)
 	}
 
 	raw, err := ioutil.ReadAll(resp.Body)

@@ -15,6 +15,16 @@ const (
 	logFilename = "events.log"
 )
 
+var giphyAPIKey string
+
+func init() {
+	envKey, ok := os.LookupEnv("GIPHY_APIKEY")
+	if !ok {
+		log.Fatalln("could not retrieve GIPHY_APIKEY from ENV")
+	}
+	giphyAPIKey = envKey
+}
+
 func main() {
 	r := createRouter()
 	w := createLog()
