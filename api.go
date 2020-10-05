@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -27,7 +28,13 @@ func recipesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rec, err := GetResponseJSON(args["i"])
+	ings := strings.Split(args["i"][0], ",")
+	if len(ings) > 3 {
+		http.Error(w, "more than 3 ingredients informed", http.StatusBadRequest)
+		return
+	}
+
+	rec, err := GetResponseJSON(ings)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

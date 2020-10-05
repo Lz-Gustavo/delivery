@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -26,7 +27,7 @@ type result struct {
 // returning the deserialized JSON as a 'recipeReq' structure. Unnecessary fields from request
 // are discarded.
 func sendRecipeReq(ingredients []string) (*recipeReq, error) {
-	url := recipeURL + "?i=" + strings.Join(ingredients, ",")
+	url := recipeURL + "?i=" + url.QueryEscape(strings.Join(ingredients, ","))
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err

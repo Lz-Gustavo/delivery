@@ -24,7 +24,7 @@ type gif struct {
 // keyword and returning the deserialized JSON as a 'giphyReq' structure. Unnecessary fields from
 // request are discarded.
 func sendGiphyReq(title string) (*giphyReq, error) {
-	url := giphyURL + "?api_key=" + giphyAPIKey + "&q=" + url.QueryEscape(title) + "&limit=1"
+	url := giphyURL + "?api_key=" + url.QueryEscape(giphyAPIKey) + "&q=" + url.QueryEscape(title) + "&limit=1"
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err

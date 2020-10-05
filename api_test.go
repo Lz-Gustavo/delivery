@@ -20,6 +20,10 @@ func TestAPIReponse(t *testing.T) {
 			"/recipes/",
 			http.StatusBadRequest,
 		},
+		{
+			"/recipes/?i=onion,tomato,garlic,cheese",
+			http.StatusBadRequest,
+		},
 	}
 
 	for _, tc := range testCases {
