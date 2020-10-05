@@ -27,7 +27,7 @@ func recipesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rec, err := sendRecipeReq(args["i"])
+	rec, err := getResponseJSON(args["i"])
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

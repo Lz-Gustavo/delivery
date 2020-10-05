@@ -12,10 +12,10 @@ const (
 )
 
 type recipeReq struct {
-	Results []results `json:"results"`
+	Results []result `json:"results"`
 }
 
-type results struct {
+type result struct {
 	Title       string `json:"title"`
 	Link        string `json:"href"`
 	Ingredients string `json:"ingredients"`
