@@ -23,11 +23,11 @@ func recipesHandler(w http.ResponseWriter, r *http.Request) {
 
 	args := r.URL.Query()
 	if _, ok := args["i"]; !ok {
-		http.Error(w, "no ingredients parameters", http.StatusBadRequest)
+		http.Error(w, "no ingredients informed", http.StatusBadRequest)
 		return
 	}
 
-	rec, err := getResponseJSON(args["i"])
+	rec, err := GetResponseJSON(args["i"])
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

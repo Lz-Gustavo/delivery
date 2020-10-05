@@ -22,6 +22,9 @@ type result struct {
 	Ingredients string `json:"ingredients"`
 }
 
+// sendRecipeReq searches for recipes on RecipePuppy API, matching the informed ingredients and
+// returning the deserialized JSON as a 'recipeReq' structure. Unnecessary fields from request
+// are discarded.
 func sendRecipeReq(ingredients []string) (*recipeReq, error) {
 	url := recipeURL + "?i=" + strings.Join(ingredients, ",")
 	resp, err := http.Get(url)
@@ -31,7 +34,7 @@ func sendRecipeReq(ingredients []string) (*recipeReq, error) {
 	defer resp.Body.Close()
 
 	if s := resp.StatusCode; s != http.StatusOK {
-		return nil, fmt.Errorf("status '%d' encountered with giphy url: '%s'", s, url)
+		return nil, fmt.Errorf("status '%d' encountered with recipe puppy url: '%s'", s, url)
 	}
 
 	raw, err := ioutil.ReadAll(resp.Body)

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"time"
+	"net/url"
 )
 
 const (
@@ -20,35 +20,16 @@ type gif struct {
 	URL string `json:"url"`
 }
 
+// sendGiphyReq searches for a single specific gif on Giphy API, matching the informed 'tittle'
+// keyword and returning the deserialized JSON as a 'giphyReq' structure. Unnecessary fields from
+// request are discarded.
 func sendGiphyReq(title string) (*giphyReq, error) {
-	url := giphyURL + "?api_key=" + giphyAPIKey + "&q=" + title + "&limit=1"
-
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	// regular request isnt working, trying with custom header values
-	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
-	req.Header.Set("Accept-Language", "en-GB,en;q=0.5")
-	req.Header.Set("Upgrade-Insecure-Requests", "1")
-	req.Header.Set("Cache-Control", "no-cache")
-	req.Header.Set("Connection", "keep-alive")
-	req.Header.Set("Pragma", "no-cache")
-	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0")
-
-	client := http.Client{
-		Timeout: time.Second,
-	}
-	resp, err := client.Do(req)
-
-	//resp, err := http.Get(url)
+	url := giphyURL + "?api_key=" + giphyAPIKey + "&q=" + url.QueryEscape(title) + "&limit=1"
+	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-
-	fmt.Println(resp)
 
 	if s := resp.StatusCode; s != http.StatusOK {
 		return nil, fmt.Errorf("status '%d' encountered with giphy url: '%s'", s, url)
@@ -58,8 +39,6 @@ func sendGiphyReq(title string) (*giphyReq, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println(string(raw))
 
 	g := &giphyReq{}
 	err = json.Unmarshal(raw, g)
